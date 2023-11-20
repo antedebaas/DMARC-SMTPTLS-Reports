@@ -20,6 +20,7 @@ ENV MAILER_PASSWORD=
 RUN apk --update add ca-certificates
 RUN apk --no-cache add \
         curl \
+        tzdata \
         nginx \
         php81 \
         php81-ctype \
