@@ -276,6 +276,9 @@ class CheckmailboxCommand extends Command
                 $smtptls_reports = array_merge($smtptls_reports,$new_reports['smtptls_reports']);
                 unlink($attachment->filePath);
             }
+            if ($_ENV['DELETE_MAILS'] == 'true') {
+                $mailbox->deleteMail($mailId);
+            }
         }
         return array('num_emails' => $num_emails, 'reports' => array('dmarc_reports' => $dmarc_reports, 'smtptls_reports' => $smtptls_reports));
     }
