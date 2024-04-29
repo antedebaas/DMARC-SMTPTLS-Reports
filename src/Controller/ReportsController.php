@@ -50,7 +50,7 @@ class ReportsController extends AbstractController
         $repository = $this->em->getRepository(SMTPTLS_Reports::class);
         $smtptls_count = $repository->getTotalRows($domains);
 
-        return $this->render('reports/index.html.twig', [
+        return $this->render($this->getParameter('app.theme').'/reports/index.html.twig', [
             'menuactive' => 'reports',
             'dmarc_count' => $dmarc_count,
             'smtptls_count' => $smtptls_count,

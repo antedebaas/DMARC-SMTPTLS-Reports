@@ -60,7 +60,7 @@ class SetupController extends AbstractController
                 $formdata = $form->getData();
                 $formdata['randomstring'] = $this->generateRandomString();
 
-                $envtemplate = $this->render('setup/env.txt.twig', [
+                $envtemplate = $this->render($this->getParameter('app.theme').'/setup/env.txt.twig', [
                     'f' => $formdata,
                 ]);
                 $envfile = __DIR__."/../../.env.local";
@@ -150,7 +150,7 @@ class SetupController extends AbstractController
             $setup['all'] = true;
         }
 
-        return $this->render('setup/index.html.twig', [
+        return $this->render($this->getParameter('app.theme').'/setup/index.html.twig', [
             'setup' => $setup,
         ]);
     }

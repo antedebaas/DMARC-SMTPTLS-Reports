@@ -67,7 +67,7 @@ class DashboardController extends AbstractController
         $repository = $this->em->getRepository(Logs::class);
         $logs = $repository->findBy(array(), array('id' => 'DESC'), 3, 0);
 
-        return $this->render('dashboard/index.html.twig', [
+        return $this->render($this->getParameter('app.theme').'/dashboard/index.html.twig', [
             'menuactive' => 'dashboard',
             'breadcrumbs' => array(array('name' => $this->translator->trans("Dashboard"), 'url' => $this->router->generate('app_dashboard'))),
             'dmarcreports' => $dmarcreports,

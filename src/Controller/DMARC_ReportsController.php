@@ -73,7 +73,7 @@ class DMARC_ReportsController extends AbstractController
             $pages["prev"] = true;
         }
 
-        return $this->render('dmarc_reports/index.html.twig', [
+        return $this->render($this->getParameter('app.theme').'/dmarc_reports/index.html.twig', [
             'reports' => $reports,
             'pages' => $pages,
             'menuactive' => 'reports',
@@ -96,7 +96,7 @@ class DMARC_ReportsController extends AbstractController
         $userRepository = $this->em->getRepository(Users::class);
 
         if(!$userRepository->denyAccessUnlessOwned($repository->getDomain($report), $this->getUser())) {
-            return $this->render('not_found.html.twig', []);
+            return $this->render($this->getParameter('app.theme').'/not_found.html.twig', []);
         }
 
         if(!in_array($this->getUser(), $report->getSeen()->getValues())) {
@@ -105,7 +105,7 @@ class DMARC_ReportsController extends AbstractController
             $this->em->flush();
         }
 
-        return $this->render('dmarc_reports/report.html.twig', [
+        return $this->render($this->getParameter('app.theme').'/dmarc_reports/report.html.twig', [
             'menuactive' => 'reports',
             'breadcrumbs' => array(
                 array('name' => $this->translator->trans("Reports"), 'url' => $this->router->generate('app_reports')),

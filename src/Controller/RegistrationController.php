@@ -33,7 +33,7 @@ class RegistrationController extends AbstractController
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserAuthenticatorInterface $userAuthenticator, Authenticator $authenticator, EntityManagerInterface $entityManager): Response
     {
         if ($this->getParameter('app.enable_registration') != "true") {
-            return $this->render('not_found.html.twig', []);
+            return $this->render($this->getParameter('app.theme').'/not_found.html.twig', []);
         }
         $repository = $this->em->getRepository(Users::class);
         if(!file_exists(dirname(__FILE__).'/../../.env.local') || $repository->count([]) == 0) {
@@ -75,7 +75,7 @@ class RegistrationController extends AbstractController
             );
         }
 
-        return $this->render('registration/register.html.twig', [
+        return $this->render($this->getParameter('app.theme').'/registration/register.html.twig', [
             'registrationForm' => $form->createView(),
         ]);
     }

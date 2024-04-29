@@ -10,13 +10,29 @@ use Doctrine\ORM\EntityManagerInterface;
 
 use App\Entity\Domains;
 
-class PolicyFileController extends AbstractController
+class FileController extends AbstractController
 {
     private $em;
 
     public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
+    }
+
+    #[Route('/template/{name}.css', name: 'app_theme_stylesheet')]
+    public function theme_stylesheet(string $name): Response
+    {
+        $response = $this->render($this->getParameter('app.theme').'/'.$name.'.css');
+        $response->headers->set('Content-Type', 'text/css');
+        return $response;
+    }
+
+    #[Route('/template/{name}.js', name: 'app_theme_javascript')]
+    public function theme_javascript(string $name): Response
+    {
+        $response = $this->render($this->getParameter('app.theme').'/'.$name.'.js');
+        $response->headers->set('Content-Type', 'text/javascript');
+        return $response;
     }
 
     #[Route('/.well-known/mta-sts.txt', name: 'app_policy_file')]
@@ -35,14 +51,14 @@ class PolicyFileController extends AbstractController
         }
 
         if($domain) {
-            $response = $this->render('policy_file/mta-sts.txt.twig', [
+            $response = $this->render($this->getParameter('app.theme').'/policy_file/mta-sts.txt.twig', [
                 'version' => $domain->getStsVersion(),
                 'mode' => $domain->getStsMode(),
                 'max_age' => $domain->getStsMaxAge(),
                 'mxnames' => $mxnames
             ]);
         } else {
-            $response = $this->render('policy_file/empty.txt.twig');
+            $response = $this->render($this->getParameter('app.theme').'/policy_file/empty.txt.twig');
         }
         $response->headers->set('Content-Type', 'text/plain');
         return $response;
@@ -61,12 +77,12 @@ class PolicyFileController extends AbstractController
                 $matches[1] = "";
             }
 
-            $response = $this->render('policy_file/autodiscover.xml.twig', [
+            $response = $this->render($this->getParameter('app.theme').'/policy_file/autodiscover.xml.twig', [
                 'loginname' => $matches[1],
                 'mailsubdomain' => $domain->getMailhost(),
             ]);
         } else {
-            $response = $this->render('policy_file/autodiscover.xml.twig', [
+            $response = $this->render($this->getParameter('app.theme').'/policy_file/autodiscover.xml.twig', [
                 'loginname' => "",
                 'mailsubdomain' => ""
             ]);

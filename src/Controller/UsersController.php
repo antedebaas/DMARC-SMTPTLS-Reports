@@ -70,7 +70,7 @@ class UsersController extends AbstractController
             $pages["prev"] = true;
         }
 
-        return $this->render('users/index.html.twig', [
+        return $this->render($this->getParameter('app.theme').'/users/index.html.twig', [
             'users' => $users,
             'pages' => $pages,
             'menuactive' => 'users',
@@ -124,7 +124,7 @@ class UsersController extends AbstractController
         }
         $setup['users_form'] = $form->createView();
 
-        return $this->render('users/edit.html.twig', [
+        return $this->render($this->getParameter('app.theme').'/users/edit.html.twig', [
             'menuactive' => 'users',
             'user' => null,
             'form' => $form,
@@ -181,7 +181,7 @@ class UsersController extends AbstractController
         }
         $setup['users_form'] = $form->createView();
 
-        return $this->render('users/edit.html.twig', [
+        return $this->render($this->getParameter('app.theme').'/users/edit.html.twig', [
             'menuactive' => 'users',
             'user' => $user,
             'form' => $form,

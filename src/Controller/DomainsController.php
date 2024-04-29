@@ -75,7 +75,7 @@ class DomainsController extends AbstractController
             $pages["prev"] = true;
         }
 
-        return $this->render('domains/index.html.twig', [
+        return $this->render($this->getParameter('app.theme').'/domains/index.html.twig', [
             'domains' => $domains,
             'pages' => $pages,
             'menuactive' => 'domains',
@@ -117,7 +117,7 @@ class DomainsController extends AbstractController
             'email' => $this->getParameter('app.mailbox_username'),
         );
 
-        return $this->render('domains/edit.html.twig', [
+        return $this->render($this->getParameter('app.theme').'/domains/edit.html.twig', [
             'menuactive' => 'domains',
             'domain' => null,
             'dns_info' => $dns_info,
@@ -138,7 +138,7 @@ class DomainsController extends AbstractController
 
         $usersRepository = $this->em->getRepository(Users::class);
         if(!$usersRepository->denyAccessUnlessOwned(array($domain->getId()), $this->getUser())) {
-            return $this->render('not_found.html.twig', []);
+            return $this->render($this->getParameter('app.theme').'/not_found.html.twig', []);
         }
 
         $form = $this->createForm(DomainFormType::class, $domain);
@@ -160,7 +160,7 @@ class DomainsController extends AbstractController
             'email' => $this->getParameter('app.mailbox_username'),
         );
 
-        return $this->render('domains/edit.html.twig', [
+        return $this->render($this->getParameter('app.theme').'/domains/edit.html.twig', [
             'menuactive' => 'domains',
             'domain' => $domain,
             'dns_info' => $dns_info,

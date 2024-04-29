@@ -65,7 +65,7 @@ class LogsController extends AbstractController
             $pages["prev"] = true;
         }
 
-        return $this->render('logs/index.html.twig', [
+        return $this->render($this->getParameter('app.theme').'/logs/index.html.twig', [
             'logs' => $logs,
             'pages' => $pages,
             'menuactive' => 'logs',
