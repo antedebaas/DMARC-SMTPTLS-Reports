@@ -19,6 +19,7 @@ ENV MAILER_PASSWORD=
 ENV DELETE_PROCESSED_MAILS=false
 ENV ENABLE_REGISTRATION=true
 ENV MAILCHECK_SCHEDULE="0 * * * *"
+ENV TZ=UTC
 
 RUN apk --update add ca-certificates && \
     apk --no-cache add \
@@ -43,12 +44,15 @@ RUN apk --update add ca-certificates && \
         php83-xml \
         php83-xmlwriter \
         php83-zip \
-        supervisor
+        supervisor \
+        tzdata
 
 COPY dockerfiles/ /
 
 RUN chmod +x /usr/local/bin/containerstartup.sh && \
     dos2unix /usr/local/bin/containerstartup.sh && \
+    chmod +x /usr/local/bin/phpstartup.sh && \
+    dos2unix /usr/local/bin/phpstartup.sh && \
     chmod +x /usr/local/bin/checkmail.sh && \
     dos2unix /etc/nginx/nginx.conf && \
     dos2unix /etc/php83/php-fpm.d/www.conf && \
