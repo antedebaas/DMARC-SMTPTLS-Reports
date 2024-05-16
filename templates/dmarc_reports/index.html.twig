@@ -6,104 +6,85 @@
                 <div class="row">
                     <div class="col-12 col-xl-12 mb-4 mb-lg-0">
                         <div class="card">
-                            <h5 class="card-header">DMARC Reports</h5>
+                            <h5 class="card-header d-flex justify-content-between">
+                              <span class="d-flex">DMARC Reports</span>
+                              <span class="d-flex">
+                        {% if pages.prev %}
+                          <a href="{{ path('app_dmarc_reports', {page: pages.page - 1, perpage: pages.perpage }) }}" class="btn btn-sm btn-secondary">&lt;</a>
+                        {% else %}
+                          <a href="#" class="btn btn-sm btn-light" disabled>&lt;</a>
+                        {% endif %}
+                        &nbsp;
+                        {% if pages.next %}
+                          <a href="{{ path('app_dmarc_reports', {page: pages.page + 1, perpage: pages.perpage }) }}" class="btn btn-sm btn-secondary">&gt;</a>
+                        {% else %}
+                          <a href="#" class="btn btn-sm btn-light" disabled>&gt;</a>
+                        {% endif %}
+                              </span>
+                            </h5>
                             <div class="card-body">
-                                <div class="table-responsive">
-                                    <table class="table">
-                                        <thead>
-                                          <tr>
-                                            <th scope="col" class="d-none d-lg-table-cell">Id</th>
-                                            <th scope="col">Domain</th>
-                                            <th scope="col">Date/Time Range</th>
-                                            <th scope="col" class="d-none d-lg-table-cell">Reporter</th>
-                                            <th scope="col" class="d-none d-lg-table-cell">External Report Id</th>
-                                            <th scope="col" class="d-none d-lg-table-cell">Messages</th>
-                                            <th scope="col" class="d-none d-lg-table-cell">Results</th>
-                                            <th scope="col"></th>
-                                          </tr>
-                                        </thead>
-                                        <tbody>
-                                        {% for report in reports %}
-                                          <tr {% for user in report.seen %}{% else %}class="table-warning"{% endfor %}>
-                                            <th scope="row" class="d-none d-lg-table-cell">{{ report.id }}</th>
-                                            <td scope="col">{{ report.domain.fqdn }}</td>
-                                            <td scope="col">
-                                              <div class="clearfix d-none d-lg-table-cell">
-                                                <span class="float-start">{{ report.begintime|date("d-M-Y H:i:s") }}</span>
-                                                &nbsp;/&nbsp;
-                                                <span class="float-end">{{ report.endtime|date("d-M-Y H:i:s") }}</span>
-                                              </div>
-                                              <div class="d-all d-lg-none">
-                                                <span>{{ report.begintime|date("d-m-Y") }}</span>
-                                                <span>{{ report.endtime|date("d-m-Y") }}</span>
-                                              </div>
-                                            </td>
-                                            <td scope="col" class="d-none d-lg-table-cell">{{ report.organisation }}</td>
-                                            <td scope="col" class="d-none d-lg-table-cell">{{ report.externalid }}</td>
-                                            <td scope="col" class="d-none d-lg-table-cell">{{ report.dmarc_records.count }}</td>
-                                            <td scope="col" class="d-none d-lg-table-cell">
-                                              {% set dkim_pass = true %}
-                                              {% set spf_pass = true %}
-                                              {% for record in report.dmarc_records %}
-                                                  {% if record.policydkim != "pass" %}
-                                                    {% set dkim_pass = false %}
-                                                  {% endif %}
-                                                  {% if record.policyspf != "pass" %}
-                                                    {% set spf_pass = false %}
-                                                  {% endif %}
-                                              {% endfor %}
-                                              <span class="btn btn-sm btn-{% if spf_pass %}success{% else %}danger{% endif %}">spf</span>
-                                              <span class="btn btn-sm btn-{% if dkim_pass %}success{% else %}danger{% endif %}">dkim</span>
-                                            </td>
-                                            <td class="text-end">
-                                              <a href="{{ path('app_dmarc_reports_report', {report: report.id}) }}" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="top" title="Open Report">
-                                                <svg height='20px' width='20px' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                                  <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 9v.906a2.25 2.25 0 0 1-1.183 1.981l-6.478 3.488M2.25 9v.906a2.25 2.25 0 0 0 1.183 1.981l6.478 3.488m8.839 2.51-4.66-2.51m0 0-1.023-.55a2.25 2.25 0 0 0-2.134 0l-1.022.55m0 0-4.661 2.51m16.5 1.615a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V8.844a2.25 2.25 0 0 1 1.183-1.981l7.5-4.039a2.25 2.25 0 0 1 2.134 0l7.5 4.039a2.25 2.25 0 0 1 1.183 1.98V19.5Z" />
-                                                </svg>
-                                              </a>
-                                              <a href="{{ path('app_dmarc_reports_delete', {report: report.id}) }}" class="btn btn-sm btn-danger" onclick="return confirm('{{'Are you sure? this can not be undone'|trans}}');" data-toggle="tooltip" data-placement="top" title="Delete">
-                                                  <svg height='20px' width='20px' xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor' class='w-6 h-6'>
-                                                    <path stroke-linecap='round' stroke-linejoin='round' d='M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0' />
-                                                  </svg></a>
-                                            </td>
-                                          </tr>
-                                          <tr class="d-table-row d-lg-none {% for user in report.seen %}{% else %} table-warning{% endfor %}">
-                                            <td colspan="3">
-                                              {% set dkim_pass = true %}
-                                              {% set spf_pass = true %}
-                                              {% for record in report.dmarc_records %}
-                                                  {% if record.policydkim != "pass" %}
-                                                    {% set dkim_pass = false %}
-                                                  {% endif %}
-                                                  {% if record.policyspf != "pass" %}
-                                                    {% set spf_pass = false %}
-                                                  {% endif %}
-                                              {% endfor %}
-                                              <span class="btn btn-sm btn-{% if spf_pass %}success{% else %}danger{% endif %}">spf</span>
-                                              <span class="btn btn-sm btn-{% if dkim_pass %}success{% else %}danger{% endif %}">dkim</span>
-                                            </td>
-                                          </tr>
-                                        {% endfor %}
-                                        </tbody>
-                                      </table>
-                                </div>
-                                <div class="clearfix">
-                                  <span class="float-start">&nbsp;</span>
-                                  <span class="float-end">
-                                  {% if pages.prev %}
-                                    <a href="{{ path('app_dmarc_reports', {page: pages.page - 1, perpage: pages.perpage }) }}" class="btn btn-sm btn-secondary">&lt;</a>
-                                  {% else %}
-                                    <a href="#" class="btn btn-sm btn-light" disabled>&lt;</a>
-                                  {% endif %}
-                                  {% if pages.next %}
-                                    <a href="{{ path('app_dmarc_reports', {page: pages.page + 1, perpage: pages.perpage }) }}" class="btn btn-sm btn-secondary">&gt;</a>
-                                  {% else %}
-                                    <a href="#" class="btn btn-sm btn-light" disabled>&gt;</a>
-                                  {% endif %}
-                                  </span>
-                                </div>
-                                
-                            </div>
-                        </div>
+                      <div class="table-responsive">
+                          <table class="table table-sm table-compact">
+                              <thead>
+                                <tr>
+                                  <th class="d-none d-md-table-cell" scope="col">Id</th>
+                                  <th scope="col">Date</th>
+                                  <th scope="col">Domain</th>
+                                  <th scope="col">Reporter</th>
+                                  <th class="d-none d-lg-table-cell" scope="col">External Id</th>
+                                  <th scope="col">Results</th>
+                                  <th scope="col"></th>
+                                </tr>
+                              </thead>
+                              <tbody>
+                              {% for report in reports %}
+                                <tr {% for user in report.seen %}{% else %}class="table-warning"{% endfor %}>
+                                  <th class="d-none d-md-table-cell" scope="row">{{ report.id }}</th>
+                                  <td>
+                                    <div class="clearfix">
+                                      {{ report.begintime|date("Y-m-d H:i:s")|replace({ '00:00:00': '', '23:59:59': '' }) }}
+                                      {% if report.begintime|date("Y-m-d") != report.endtime|date("Y-m-d") %}
+                                        <span class="d-none d-lg-inline">
+                                          .. 
+                                          {{ report.endtime|date("Y-m-d H:i:s")|replace({ '00:00:00': '', '23:59:59': '' }) }}
+                                        </span>
+                                      {% endif %}
+                                    </div>
+                                  </td>
+                                  <td>{{ report.domain.fqdn }}</td>
+                                  <td class="d-none d-md-table-cell">{{ report.organisation }}</td>
+                                  <td class="d-none d-lg-table-cell" title="{{ report.externalid }}">{{ report.externalid|slice(0,8) }}...</td>
+                                  <td class="text-nowrap">
+                                    {% set dkim_pass = true %}
+                                    {% set spf_pass = true %}
+                                    {% for record in report.dmarc_records %}
+                                        {% if record.policydkim != "pass" %}
+                                          {% set dkim_pass = false %}
+                                        {% endif %}
+                                        {% if record.policyspf != "pass" %}
+                                          {% set spf_pass = false %}
+                                        {% endif %}
+                                    {% endfor %}
+                                    <span class="badge badge-pill text-bg-{% if spf_pass %}success{% else %}danger{% endif %}">SPF</span>
+                                    <span class="badge badge-pill text-bg-{% if dkim_pass %}success{% else %}danger{% endif %}">DKIM</span>
+                                  </td>
+                                  <td class="text-nowrap">
+                                    <a href="{{ path('app_dmarc_reports_report', {report: report.id}) }}" class="link-primary px-2" title="View details">
+                                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                      </svg></a>
+                                    <a href="{{ path('app_dmarc_reports_delete', {report: report.id}) }}" class="link-danger" title="Delete entry ..." onclick="return confirm('{{'Are you sure? this can not be undone'|trans}}');">
+                                      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="m14.74 9-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 0 1-2.244 2.077H8.084a2.25 2.25 0 0 1-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 0 0-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 0 1 3.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 0 0-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 0 0-7.5 0" />
+                                      </svg></a>
+                                  </td>
+                                </tr>
+                              {% endfor %}
+                              </tbody>
+                            </table>
+                      </div>
                     </div>
+                  </div>
+                </div>
 {% endblock %}

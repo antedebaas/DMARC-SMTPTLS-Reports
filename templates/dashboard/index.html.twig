@@ -6,30 +6,28 @@
 
 {% block body %}
                 <div class="row">
-                    <div class="col-12 col-xl-6 mb-4 mb-lg-4">
+                    <div class="col-12 col-xxl-6 mb-4 mb-lg-4">
                         <div class="card">
                             <h5 class="card-header">Latest DMARC reports</h5>
                             <div class="card-body">
                                 <div class="table-responsive">
-                                    <table class="table">
+                                    <table class="table table-sm table-compact">
                                         <thead>
                                           <tr>
-                                            <th scope="col" class="d-none d-lg-table-cell">Id</th>
+                                            <th class="d-none d-md-table-cell" scope="col">Id</th>
                                             <th scope="col">Domain</th>
                                             <th scope="col">Reporter</th>
-                                            <th scope="col" class="d-none d-lg-table-cell">Messages</th>
-                                            <th scope="col" class="d-none d-lg-table-cell">Results</th>
+                                            <th scope="col">Results</th>
                                             <th scope="col"></th>
                                           </tr>
                                         </thead>
                                         <tbody>
                                         {% for report in dmarcreports %}
                                           <tr {% for user in report.seen %}{% else %}class="table-warning"{% endfor %}>
-                                            <th scope="row" class="d-none d-lg-table-cell">{{ report.id }}</th>
+                                            <th class="d-none d-md-table-cell" scope="row">{{ report.id }}</th>
                                             <td>{{ report.domain.fqdn }}</td>
-                                            <td>{{ report.organisation }}</td>
-                                            <td class="d-none d-lg-table-cell">{{ report.dmarc_records.count }}</td>
-                                            <td class="d-none d-lg-table-cell">
+                                            <td class="d-none d-md-table-cell">{{ report.organisation }}</td>
+                                            <td>
                                               {% set dkim_pass = true %}
                                               {% set spf_pass = true %}
                                               {% for record in report.dmarc_records %}
@@ -40,31 +38,15 @@
                                                     {% set spf_pass = false %}
                                                   {% endif %}
                                               {% endfor %}
-                                              <span class="btn btn-sm btn-{% if spf_pass %}success{% else %}danger{% endif %}">spf</span>
-                                              <span class="btn btn-sm btn-{% if dkim_pass %}success{% else %}danger{% endif %}">dkim</span>
+                                              <span class="badge badge-pill text-bg-{% if spf_pass %}success{% else %}danger{% endif %}">SPF</span>
+                                              <span class="badge badge-pill text-bg-{% if dkim_pass %}success{% else %}danger{% endif %}">DKIM</span>
                                             </td>
-                                            <td class="text-end">
-                                              <a href="{{ path('app_dmarc_reports_report', {report: report.id}) }}" class="btn btn-sm btn-primary" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="top" title="Open Report">
-                                                <svg height='20px' width='20px' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                                  <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 9v.906a2.25 2.25 0 0 1-1.183 1.981l-6.478 3.488M2.25 9v.906a2.25 2.25 0 0 0 1.183 1.981l6.478 3.488m8.839 2.51-4.66-2.51m0 0-1.023-.55a2.25 2.25 0 0 0-2.134 0l-1.022.55m0 0-4.661 2.51m16.5 1.615a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V8.844a2.25 2.25 0 0 1 1.183-1.981l7.5-4.039a2.25 2.25 0 0 1 2.134 0l7.5 4.039a2.25 2.25 0 0 1 1.183 1.98V19.5Z" />
-                                                </svg>
-                                              </a>
-                                            </td>
-                                          </tr>
-                                          <tr class="d-table-row d-lg-none {% for user in report.seen %}{% else %} table-warning{% endfor %}">
-                                            <td colspan="3">
-                                              {% set dkim_pass = true %}
-                                              {% set spf_pass = true %}
-                                              {% for record in report.dmarc_records %}
-                                                  {% if record.policydkim != "pass" %}
-                                                    {% set dkim_pass = false %}
-                                                  {% endif %}
-                                                  {% if record.policyspf != "pass" %}
-                                                    {% set spf_pass = false %}
-                                                  {% endif %}
-                                              {% endfor %}
-                                              <span class="btn btn-sm btn-{% if spf_pass %}success{% else %}danger{% endif %}">spf</span>
-                                              <span class="btn btn-sm btn-{% if dkim_pass %}success{% else %}danger{% endif %}">dkim</span>
+                                            <td>
+                                              <a href="{{ path('app_dmarc_reports_report', {report: report.id}) }}" class="link-primary">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                                                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                                </svg></a>
                                             </td>
                                           </tr>
                                         {% endfor %}
@@ -75,15 +57,15 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-12 col-xl-6 mb-4 mb-lg-4">
+                    <div class="col-12 col-xxl-6 mb-4 mb-lg-4">
                         <div class="card">
                             <h5 class="card-header">Latest SMTP-TLS reports</h5>
                             <div class="card-body">
                                 <div class="table-responsive">
-                                    <table class="table">
+                                    <table class="table table-sm table-compact">
                                         <thead>
                                           <tr>
-                                            <th scope="col" class="d-none d-lg-table-cell">Id</th>
+                                            <th scope="col">Id</th>
                                             <th scope="col">Domain</th>
                                             <th scope="col">Reporter</th>
                                             <th scope="col">Results</th>
@@ -93,14 +75,14 @@
                                         <tbody>
                                         {% for report in smtptlsreports %}
                                           <tr {% for user in report.seen %}{% else %}class="table-warning"{% endfor %}>
-                                            <th scope="row" class="d-none d-lg-table-cell">{{ report.id }}</th>
+                                            <th scope="row">{{ report.id }}</th>
                                             <td>
                                               {% for policy in report.smtptls_policies %}
                                                 {{policy.policydomain.fqdn}}<br>
                                               {% endfor %}
                                             </td>
                                             <td>{{ report.organisation }}</td>
-                                            <td class="d-none d-lg-table-cell">
+                                            <td>
                                               {% set sts_type = false %}
                                               {% set sts_version = true %}
                                               {% set sts_mode = true %}
@@ -124,38 +106,11 @@
                                               <br>
                                               {% endfor %}
                                             </td>
-                                            <td class="text-end">
-                                              <a href="{{ path('app_smtptls_reports_report', {report: report.id}) }}" class="btn btn-sm btn-primary" class="btn btn-sm btn-primary" data-toggle="tooltip" data-placement="top" title="Open Report">
-                                                <svg height='20px' width='20px' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                                  <path stroke-linecap="round" stroke-linejoin="round" d="M21.75 9v.906a2.25 2.25 0 0 1-1.183 1.981l-6.478 3.488M2.25 9v.906a2.25 2.25 0 0 0 1.183 1.981l6.478 3.488m8.839 2.51-4.66-2.51m0 0-1.023-.55a2.25 2.25 0 0 0-2.134 0l-1.022.55m0 0-4.661 2.51m16.5 1.615a2.25 2.25 0 0 1-2.25 2.25h-15a2.25 2.25 0 0 1-2.25-2.25V8.844a2.25 2.25 0 0 1 1.183-1.981l7.5-4.039a2.25 2.25 0 0 1 2.134 0l7.5 4.039a2.25 2.25 0 0 1 1.183 1.98V19.5Z" />
-                                                </svg>
-                                              </a>
-                                            </td>
-                                          </tr>
-                                          <tr class="d-table-row d-lg-none {% for user in report.seen %}{% else %} table-warning{% endfor %}">
-                                            <td colspan="3">
-                                              {% set sts_type = false %}
-                                              {% set sts_version = true %}
-                                              {% set sts_mode = true %}
-                                              {% for policy in report.smtptls_policies %}
-                                                  <span class="btn btn-sm btn-{% if policy.summarysuccessfulcount == 0 %}secondary{% else %}success{% endif %}">{{ policy.summarysuccessfulcount }} Successful</span>
-                                                  <span class="btn btn-sm btn-{% if policy.summarysuccessfulcount == 0 %}danger{% else %}success{% endif %}">{{ policy.summaryfailedcount }} Failed</span>
-                                                  {% if policy.policytype == 'no-policy-found' %}
-                                                    <span class="btn btn-sm btn-danger">no-policy-found</span>
-                                                  {% else %}
-                                                    {% if policy.policytype == 'sts' %}
-                                                      {% if policy.policystringversion == 'STSv1' %}
-                                                        <span class="btn btn-sm btn-success">STSv1</span>
-                                                      {% else %}
-                                                        <span class="btn btn-sm btn-danger">Policy version empty</span>
-                                                      {% endif %}
-                                                      <span class="btn btn-sm btn-{% if policy.policystringmode == 'enforce' %}success{% elseif policy.policystringmode == 'testing' %}warning{% else %}danger{% endif %}">{% if policy.policystringmode %}{{ policy.policystringmode }}{% else %}Policy mode empty{% endif %}</span>
-                                                    {% elseif policy.policytype == 'tlsa' %}
-                                                      <span class="btn btn-sm btn-success">TLSA</span>
-                                                    {% endif %}
-                                                  {% endif %}
-                                              <br>
-                                              {% endfor %}
+                                            <td><a href="{{ path('app_smtptls_reports_report', {report: report.id}) }}" class="btn btn-sm btn-primary">
+                                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" class="w-6 h-6">
+                                                  <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                                  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                                </svg></a>
                                             </td>
                                           </tr>
                                         {% endfor %}
@@ -174,10 +129,10 @@
                             <h5 class="card-header">Latest logs</h5>
                             <div class="card-body">
                                 <div class="table-responsive">
-                                    <table class="table">
+                                    <table class="table table-sm table-compact">
                                         <thead>
                                           <tr>
-                                            <th scope="col" class="d-none d-lg-table-cell">Id</th>
+                                            <th scope="col">Id</th>
                                             <th scope="col">Date &amp; Time</th>
                                             <th scope="col">Message</th>
                                           </tr>
@@ -185,7 +140,7 @@
                                         <tbody>
                                         {% for log in logs %}
                                           <tr {% if log.success == false %}class="table-danger"{% endif %}>
-                                            <th scope="row" class="d-none d-lg-table-cell">{{ log.id }}</th>
+                                            <th scope="row">{{ log.id }}</th>
                                             <td>{{ log.time|date("d-M-Y H:i:s") }}</td>
                                             <td>{{ log.message }}</td>
                                           </tr>

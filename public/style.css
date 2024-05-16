@@ -1,50 +1,141 @@
-.sidebar {
-    position: fixed;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    z-index: 100;
-    padding: 90px 0 0;
-    box-shadow: inset -1px 0 0 rgba(0, 0, 0, .1);
-    z-index: 99;
+
+
+:root, [data-bs-theme=light] {
+  --bs-breadcrumb-margin-bottom: 0.2rem;
 }
 
-@media (max-width: 767.98px) {
-    .sidebar {
-        top: 10rem;
-        padding: 0;
+/* Defaults. */
+/* for extra small screens, show a similar sidebar but full width and only if the menu button is pressed. */
+@media(max-width: 1199px) {
+    button.navbar-toggler {
+        display: inline;
+        border-radius: 0;
+        border: 0;
+        background-color: var(--bs-secondary-bg);
     }
+    nav#sidebar {
+        display: none;
+    }
+    nav#sidebar a.nav-link-extra { margin-top: 1em };
+    nav#sidebar a.nav-link {
+        display: block;
+        width: 100%;
+        font-size: 150%;
+        height: 40px;
+    }
+    nav#sidebar a.nav-link:click {
+        background-color: var(--bs-primary-bg);
+    }
+
+    nav#sidebar.show {
+        position: fixed;
+        display: flex;
+        flex-wrap: wrap;
+        align-content: start;
+        height: 100vH;
+        width: 100vW;
+        top: 3rem;
+        right: 0;
+        padding: 1em;
+        background-color: var(--bs-secondary-bg);
+        z-index: 99;
+    }
+
+    div.mainarea {
+        position: relative;
+        top: 3rem;
+    }
+
+    .card-body {
+        --bs-card-spacer-y: 0.3rem;
+        --bs-card-spacer-x: 0.3rem;
+        padding: var(--bs-card-spacer-x) var(--bs-card-spacer-y);
+    }
+
+}
+
+/* [>=sm] For screens between, show a top icon bar with or without labels.
+@media(min-width:768px) {
+    button.navbar-toggler { display: none; }
+    nav#sidebar { display: flex; }
+    nav#sidebar a.nav-link {
+        padding-left: 0.5rem;
+        padding-right: 0.5rem;
+        padding-top: 0.2rem;
+    }
+    nav#sidebar a.nav-link-extra { display: none };
+    nav#sidebar a.nav-link span { display: none; }
+    div.mainarea { margin-top: 3rem; }
+}
+
+/* [lg] * /
+@media(min-width:992px) {
+    nav#sidebar a.nav-link span { display: inline; }
+
+}
+*/
+
+/* For extra wide screens, show a static sidebar at the left, with text, vertically aligned. */
+@media (min-width: 1200px) {
+    button.navbar-toggler { display: none; }
+    nav#sidebar {
+        position: fixed;
+        display: flex;
+        flex-wrap: wrap;
+        align-content: start;
+        height: 100vH;
+        width: 160px;
+        left: 0;
+        top: 3rem;
+        padding: 1em;
+        background-color: var(--bs-secondary-bg);
+        z-index: 99;
+    }
+    nav#sidebar a.nav-link {
+        padding-left: 0;
+        padding-right: 0;
+        padding-top: 0;
+    }
+    nav#sidebar a.nav-link-extra { margin-top: 1em };
+    div.mainarea {
+        margin-top: 3rem;
+        margin-left: 160px;
+        width: calc(100vW - 160px);
+    }
+}
+
+div.breadcrumb-row nav {
+    padding-top: 0.3rem;
+}
+
+ol.breadcrumb {
+    margin-bottom: 0.2rem;
 }
     
-.navbar {
-    box-shadow: inset 0 -1px 0 rgba(0, 0, 0, .1);
+a.navbar-brand {
+    font-weight: bold;
+    padding-left:1em;
 }
 
-@media (min-width: 767.98px) {
-    .navbar {
-        top: -100;
-        position: sticky;
-        z-index: 999;
-    }
-}
-
-.sidebar .nav-link {
+nav#sidebar .nav-link {
+    font-size: 120%;
+    height: 36px;
     color: #333;
 }
+nav#sidebar a.nav-link.active {
+    color: #0d6efd;
+}
 
-.sidebar .nav-link svg {
+a.nav-link svg {
     width: 20px;
     height: 20px;
 }
 
-.sidebar .nav-link.active {
-    color: #0d6efd;
+.card-header a.btn-sm {
+    --bs-btn-padding-y: 0;
 }
 
 .help_info {
     width: 18px;
     height: 1x;
-}
-.card {
-    --bs-card-spacer-x: 1rem;
 }

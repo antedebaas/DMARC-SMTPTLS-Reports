@@ -8,65 +8,77 @@
                 <div class="row">
                     <div class="col-12 col-xl-12 mb-4 mb-lg-0">
                         <div class="card">
-                            <h5 class="card-header">Domains</h5>
+                            <h5 class="card-header d-flex justify-content-between">
+                              <span class="d-flex">Domains</span>
+                              <span class="d-flex">
+                              {% if pages.prev %}
+                                <a href="{{ path('app_domains', {page: pages.page - 1, perpage: pages.perpage }) }}" class="btn btn-sm btn-secondary">&lt;</a>
+                              {% else %}
+                                <a href="#" class="btn btn-sm btn-light" disabled>&lt;</a>
+                              {% endif %}
+                              &nbsp;
+                              {% if pages.next %}
+                                <a href="{{ path('app_domains', {page: pages.page + 1, perpage: pages.perpage }) }}" class="btn btn-sm btn-secondary">&gt;</a>
+                              {% else %}
+                                <a href="#" class="btn btn-sm btn-light" disabled>&gt;</a>
+                              {% endif %}
+                              </span>
+                            </h5>
                             <div class="card-body">
                                 <div class="table-responsive">
-                                    <table class="table">
+                                    <table class="table table-sm table-compact">
                                         <thead>
                                           <tr>
-                                            <th scope="col" class="d-none d-lg-table-cell">Id</th>
+                                            <th class="d-none d-md-table-cell" scope="col">Id</th>
                                             <th scope="col">Domain FQDN</th>
-                                            <th scope="col" class="d-none d-lg-table-cell">Mailhost</th>
-                                            <th scope="col" class="d-none d-lg-table-cell">MX Records</th>
-                                            <th scope="col">Total DMARC reports</th>
-                                            <th scope="col">Total SMTP-TLS policies</th>
-                                            <th scope="col"></th>
+                                            <th class="d-none d-md-table-cell" scope="col">Mailhost</th>
+                                            <th scope="col">
+                                              MX <span class="d-none d-md-inline">Records</span>
+                                            </th>
+                                            <th class="text-end" scope="col">
+                                              <span class="d-none d-md-inline">Total DMARC reports</span>
+                                              <span class="d-md-none text-nowrap"># DMARC</span>
+                                            </th>
+                                            <th class="text-end" scope="col">
+                                              <span class="d-none d-md-inline">Total SMTP-TLS policies</span>
+                                              <span class="d-md-none text-nowrap"># TLS</span>
+                                            
+                                            </th>
+                                            <th scope="col">Action</th>
                                           </tr>
                                         </thead>
                                         <tbody>
                                         {% for domain in domains %}
                                           <tr>
-                                            <th scope="row" class="d-none d-lg-table-cell">{{ domain.id }}</th>
+                                            <th class="d-none d-md-table-cell" scope="row">{{ domain.id }}</th>
                                             <td>{{ domain.fqdn }}</td>
-                                            <td class="d-none d-lg-table-cell">{{ domain.mailhost }}</td>
-                                            <td class="d-none d-lg-table-cell">
+                                            <td class="d-none d-md-table-cell">{{ domain.mailhost }}</td>
+                                            <td>
                                               {% for mx in domain.mxrecords %}
                                                 {{ mx.name }}<br>
                                               {% endfor %}
                                             </td>
-                                            <td>{{ domain.dmarc_reports|length }}</td>
-                                            <td>{{ domain.smtptls_policies|length }}</td>
-                                            <td class="text-end">
-                                                <a href="{{ path('app_domains_edit', {id: domain.id}) }}" class="btn btn-sm btn-secondary" data-toggle="tooltip" data-placement="top" title="Edit">
-                                                  <svg height='20px' width='20px' xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
-                                                  </svg>
-                                                </a>
-                                                <a href="{{ path('app_domains_delete', {id: domain.id}) }}" class="btn btn-sm btn-danger" onclick="return confirm('{{'Are you sure? this will also delete all its reports and can not be undone'|trans}}');" data-toggle="tooltip" data-placement="top" title="Delete">
-                                                  <svg height='20px' width='20px' xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='currentColor' class='w-6 h-6'>
-                                                    <path stroke-linecap='round' stroke-linejoin='round' d='M14.74 9l-.346 9m-4.788 0L9.26 9m9.968-3.21c.342.052.682.107 1.022.166m-1.022-.165L18.16 19.673a2.25 2.25 0 01-2.244 2.077H8.084a2.25 2.25 0 01-2.244-2.077L4.772 5.79m14.456 0a48.108 48.108 0 00-3.478-.397m-12 .562c.34-.059.68-.114 1.022-.165m0 0a48.11 48.11 0 013.478-.397m7.5 0v-.916c0-1.18-.91-2.164-2.09-2.201a51.964 51.964 0 00-3.32 0c-1.18.037-2.09 1.022-2.09 2.201v.916m7.5 0a48.667 48.667 0 00-7.5 0' />
-                                                  </svg>
-                                                </a>
+                                            <td class="text-end">{{ domain.dmarc_reports|length }}</td>
+                                            <td class="text-end">{{ domain.smtptls_policies|length }}</td>
+                                            <td class="text-nowrap">
+                                                <a href="{{ path('app_domains_edit', {id: domain.id}) }}" class="link-primary px-2">
+                                                  <!-- Bootstrap icon 'eye-fill' -->
+                                                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-eye-fill" viewBox="0 0 16 16">
+                                                    <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0"/>
+                                                    <path d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8m8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7"/>
+                                                  </svg></a>
+                                                <a href="{{ path('app_domains_delete', {id: domain.id}) }}" class="link-danger"  onclick="return confirm('{{'Are you sure? this will also delete all its reports and can not be undone'|trans}}');">
+                                                  <!-- Bootstrap icon 'trash-fill' -->
+                                                  <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash-fill" viewBox="0 0 16 16">
+                                                    <path d="M2.5 1a1 1 0 0 0-1 1v1a1 1 0 0 0 1 1H3v9a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V4h.5a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1H10a1 1 0 0 0-1-1H7a1 1 0 0 0-1 1zm3 4a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 .5-.5M8 5a.5.5 0 0 1 .5.5v7a.5.5 0 0 1-1 0v-7A.5.5 0 0 1 8 5m3 .5v7a.5.5 0 0 1-1 0v-7a.5.5 0 0 1 1 0"/>
+                                                  </svg></a>
                                             </td>
                                           </tr>
                                         {% endfor %}
                                         </tbody>
                                       </table>
                                 </div>
-                                <div class="clearfix">
-                                  <span class="float-start">&nbsp;</span>
-                                  <span class="float-end">
-                                  {% if pages.prev %}
-                                    <a href="{{ path('app_domains', {page: pages.page - 1, perpage: pages.perpage }) }}" class="btn btn-sm btn-secondary">&lt;</a>
-                                  {% else %}
-                                    <a href="#" class="btn btn-sm btn-light" disabled>&lt;</a>
-                                  {% endif %}
-                                  {% if pages.next %}
-                                    <a href="{{ path('app_domains', {page: pages.page + 1, perpage: pages.perpage }) }}" class="btn btn-sm btn-secondary">&gt;</a>
-                                  {% else %}
-                                    <a href="#" class="btn btn-sm btn-light" disabled>&gt;</a>
-                                  {% endif %}
-                                  </span>
+                                <div>
                                 </div>
                                 
                             </div>
