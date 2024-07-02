@@ -38,7 +38,7 @@ Setup is pretty easy
 * php-imap
 * php-mbstring
 * php-pdo
-* php-pdo_mysql
+* php-pdo-mysql
 * php-pdo-pgsql
 * php-pdo-sqlite
 * php-phar
